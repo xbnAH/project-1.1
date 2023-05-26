@@ -11,8 +11,19 @@
     <div class="container" id="app">
         <h1>{{title}}</h1>
         <div class="form-comment">
-          <input type="text">
-          <span>xbn</span>
+          <input
+            type="text"
+            v-bind:placeholder="placeholderStr"
+            v-bind:value="inputText"
+            v-on:input="inputChange"
+          />
+        </div>
+        <button style="margin-top: 10px;" v-on:click="addNote">Add</button>
+        <hr>
+        <div>
+          <ol>
+            <li v-for="note in notes">{{note}}</li>
+          </ol>
         </div>
     </div>
     <!-- <script src="app.js"></script> -->
@@ -23,8 +34,20 @@
   createApp({
     data() {
       return {
-        title: 'xbn ошибок',
-        counter: 0
+        title: 'xbn note',
+        counter: 0,
+        placeholderStr: "note text",
+        inputText: "",
+        notes: [],
+      }
+    },
+    methods:{
+      inputChange(event) {
+        this.inputText=event.target.value;
+      },
+      addNote() {
+        this.notes.push(this.inputText);
+        this.inputText = "";
       }
     }
   }).mount('#app')
