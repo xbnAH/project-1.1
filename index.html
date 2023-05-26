@@ -46,7 +46,7 @@
         this.inputText=event.target.value;
       },
       addNote() {
-        this.notes.push(this.inputText);
+        if (this.inputText!="") this.notes.push(this.inputText);
         this.inputText = "";
       }
     }
