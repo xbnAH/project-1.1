@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="rus">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,34 +11,52 @@
     <div class="container" id="app">
         <h1>{{title}}</h1>
         <div class="form-comment">
+        <div>
           <input
+            class="note-input"
             type="text"
-            v-bind:placeholder="placeholderStr"
-            v-bind:value="inputText"
-            v-on:input="inputChange"
+            :placeholder="placeholderStr"
+            :value="inputText"
+            @input="inputChange"
+            @keypress.enter="addNote"
+            :maxlength = "limit"
           />
         </div>
-        <button style="margin-top: 10px;" v-on:click="addNote">Add</button>
+        <button class="add-note" style="margin-top: 10px;" v-on:click="addNote">Add note</button>
+      </div>
         <hr>
         <div>
-          <ol>
-            <li v-for="note in notes">{{note}}</li>
+          <!-- <div>{{counter}}</div> -->
+          <div>{{notes.length}}</div>
+          <ol v-if="notes.length>0">
+            <li v-for="(note, idx) in notes">
+              <!-- <div class="text-li">{{toUpperCase(note)}}</div> -->
+              <div class="text-li">{{note}}</div>
+              <button class="delete-btn" v-on:click="removeNote(idx, $event)">
+                delete
+              </button>
+            </li>
           </ol>
+          <div v-else>Notes is empty</div>
         </div>
     </div>
     <!-- <script src="app.js"></script> -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-  const { createApp } = Vue
 
+
+
+
+  <script>
+  const { createApp } = Vue
   createApp({
     data() {
       return {
         title: 'xbn note',
         counter: 0,
-        placeholderStr: "note text",
+        placeholderStr: "Note text",
         inputText: "",
         notes: [],
+        limit: 30,
       }
     },
     methods:{
@@ -46,9 +64,24 @@
         this.inputText=event.target.value;
       },
       addNote() {
-        if (this.inputText!="") this.notes.push(this.inputText);
+        if (this.inputText!="") {this.notes.push(this.inputText)
+          // this.counter ++
+        };
         this.inputText = "";
-      }
+        
+      },
+      // inputKeyPress(event) {
+      //   if (event.key=="Enter") {
+      //     this.addNote();
+      //   }
+      // },
+      removeNote(idx, event) {
+        this.notes.splice(idx, 1);
+        // this.counter --
+      },
+      // toUpperCase(item) {
+      //   return item.toUpperCase()
+      // },
     }
   }).mount('#app')
 </script>
