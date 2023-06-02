@@ -1,9 +1,11 @@
-const { createApp } = Vue
+const {
+    createApp
+} = Vue
 
-  createApp({
+createApp({
     data() {
-      return {
-        counter: 0
-      }
+        return {
+            counter: 0
+        }
     }
-  }).mount('#app')
+}).mount('#app')

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="rus">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,38 +8,54 @@
     <link rel="stylesheet" href="css.css">
     <title>Document</title>
 </head>
+
 <body>
     <div class="container" id="app">
-        <h1>{{title}}</h1>
+        <h1 :style="{color: inputText.length > 5 ? 'red' : 'red'}">{{title}}</h1>
         <div class="form-comment">
-        <div>
-          <input
-            class="note-input"
-            type="text"
-            :placeholder="placeholderStr"
-            :value="inputText"
-            @input="inputChange"
-            @keypress.enter="addNote"
-            :maxlength = "limit"
-          />
+            <div>
+                <input
+                    class="note-input"
+                    type="text"
+                    :placeholder="placeholderStr"
+                    v-model="inputText"
+                    @input="inputChange"
+                    @keypress.enter="addNote"
+                    :maxlength="limit"
+                />
+            </div>
+            <button
+                :class= "inputText.length > 6 ? 'add-note' : 'add-note1'"
+                @click="addNote">
+                Add note
+            </button>
         </div>
-        <button class="add-note" style="margin-top: 10px;" v-on:click="addNote">Add note</button>
-      </div>
         <hr>
         <div>
-          <!-- <div>{{counter}}</div> -->
-          <div>{{notes.length}}</div>
-          <ol v-if="notes.length>0">
-            <li v-for="(note, idx) in notes">
-              <!-- <div class="text-li">{{toUpperCase(note)}}</div> -->
-              <div class="text-li">{{note}}</div>
-              <button class="delete-btn" v-on:click="removeNote(idx, $event)">
-                delete
-              </button>
-            </li>
-          </ol>
-          <div v-else>Notes is empty</div>
+            <!-- <div>{{counter}}</div> -->
+            <div>{{notes.length}}</div>
+            <!-- <div>{{doubleCount}}</div> -->
+            <ol v-if="notes.length>0">
+                <li v-for="(note, idx) in notes">
+                    <!-- <div class="text-li">{{toUpperCase(note)}}</div> -->
+                    <div class="text-li">{{note}}</div>
+                    <button class="delete-btn" v-on:click="removeNote(idx, $event)">
+                        delete
+                    </button>
+                </li>
+            </ol>
+            <div v-else>Notes is empty</div>
         </div>
+        <hr>
+        <div class="persons">
+            <div class="person-card" v-for="person in persons">
+                <img :src="person.avatar" class="person-avatar">
+                <span>name: {{person.name}}</span>
+                <span>age: {{person.age}}</span>
+                <span :style="{color: person.salary > 1000 ? 'green' : 'red'}">salary: {{person.salary}}</span>
+            </div>
+        </div>
+        <button class="add-note" @click="filterPerson">filter</button>
     </div>
     <!-- <script src="app.js"></script> -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -46,44 +63,86 @@
 
 
 
-  <script>
-  const { createApp } = Vue
-  createApp({
-    data() {
-      return {
-        title: 'xbn note',
-        counter: 0,
-        placeholderStr: "Note text",
-        inputText: "",
-        notes: [],
-        limit: 30,
-      }
-    },
-    methods:{
-      inputChange(event) {
-        this.inputText=event.target.value;
-      },
-      addNote() {
-        if (this.inputText!="") {this.notes.push(this.inputText)
-          // this.counter ++
-        };
-        this.inputText = "";
-        
-      },
-      // inputKeyPress(event) {
-      //   if (event.key=="Enter") {
-      //     this.addNote();
-      //   }
-      // },
-      removeNote(idx, event) {
-        this.notes.splice(idx, 1);
-        // this.counter --
-      },
-      // toUpperCase(item) {
-      //   return item.toUpperCase()
-      // },
-    }
-  }).mount('#app')
-</script>
+    <script>
+        const {
+            createApp
+        } = Vue
+        createApp({
+            data() {
+                return {
+                    title: 'xbn note',
+                    counter: 0,
+                    placeholderStr: "Note text",
+                    inputText: "",
+                    notes: [],
+                    limit: 30,
+                    persons: [
+                        {
+                        age:18,
+                        name:'Rudik',
+                        salary:1000,
+                        avatar: 'https://randomuser.me/api/portraits/men/7.jpg'
+                        },
+                        {
+                        age:19,
+                        name:'Vitalik',
+                        salary:2000,
+                        avatar: 'https://randomuser.me/api/portraits/men/75.jpg'
+                        },
+                        {
+                        age:18,
+                        name:'Valera',
+                        salary:3000,
+                        avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
+                        }
+                    ]
+                }
+            },
+            methods: {
+                inputChange(event) {
+                    this.inputText = event.target.value;
+                },
+                addNote() {
+                    if (this.inputText != "") {
+                        this.notes.push(this.inputText)
+                        // this.counter ++
+                    };
+                    this.inputText = "";
+                },
+                // inputKeyPress(event) {
+                //   if (event.key=="Enter") {
+                //     this.addNote();
+                //   }
+                // },
+                removeNote(idx, event) {
+                    this.notes.splice(idx, 1);
+                    // this.counter --
+                },
+                // toUpperCase(item) {
+                //   return item.toUpperCase()
+                // },
+                filterPerson() {
+                    console.log("+++");
+                }
+            },
+            computed: {
+                doubleCount() {
+                    return this.notes.length * 2
+                },
+                disabled() {
+                    return (this.inputText > 6) ? false : true
+                }
+            },
+            watch: {
+                // inputText(value) {
+                //     if (value.length > 10) {
+                //         this.inputText = ""
+                //     }
+                // }
+            }
+        }).mount('#app')
+
+    </script>
 </body>
+
 </html>
