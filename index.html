@@ -47,15 +47,36 @@
             <div v-else>Notes is empty</div>
         </div>
         <hr>
+        <div style="display: flex; justify-content: center;">
+            <button class="add-person" @click="filterPerson">filter</button>
+            <button class="add-person" @click="sortBySalary">sort by salary</button>
+            <button class="add-person" @click="sortByAge">sort by age</button>
+            <button class="add-person" @click="cartShowf">cart</button>
+        </div>
+        <div v-if="cartShow" class="cart">
+            <hr>
+            <span v-if="cart.length==0">cart is empty</span>
+            <ol v-else="notes.length>0">
+                <li v-else v-for="(item, idx) in cart">
+                    {{item.name}} {{item.salary}} {{item.age}}
+                    <button class="delete-btn" v-on:click="removeCartItem(idx, $event)">
+                        delete
+                    </button>
+                </li>
+            </ol>
+            <div>PRICE: {{cartSum}}</div>
+            <hr>
+        </div>
         <div class="persons">
-            <div class="person-card" v-for="person in persons">
+            <div class="person-card" v-for="(person, idx) in persons">
                 <img :src="person.avatar" class="person-avatar">
                 <span>name: {{person.name}}</span>
                 <span>age: {{person.age}}</span>
                 <span :style="{color: person.salary > 1000 ? 'green' : 'red'}">salary: {{person.salary}}</span>
+                <button class="add-person" v-on:click="buyMan(idx, $event)">buy</button>
             </div>
         </div>
-        <button class="add-note" @click="filterPerson">filter</button>
+        
     </div>
     <!-- <script src="app.js"></script> -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -94,8 +115,30 @@
                         name:'Valera',
                         salary:3000,
                         avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
-                        }
-                    ]
+                        },
+                        {
+                        age:18,
+                        name:'Anna',
+                        salary:1000,
+                        avatar: 'https://randomuser.me/api/portraits/men/37.jpg'
+                        },
+                        {
+                        age:18,
+                        name:'Rudik',
+                        salary:1000,
+                        avatar: 'https://randomuser.me/api/portraits/men/27.jpg'
+                        },
+                        {
+                        age:18,
+                        name:'Rudik',
+                        salary:1000,
+                        avatar: 'https://randomuser.me/api/portraits/men/72.jpg'
+                        },
+                    ],
+                    array:[435,234,786,4324,345,6578,324,234],
+                    printPersons:[],
+                    cartShow: false,
+                    cart:[]
                 }
             },
             methods: {
@@ -123,7 +166,31 @@
                 // },
                 filterPerson() {
                     console.log("+++");
-                }
+                    return this.persons.filter(a=>a.salary>1000)
+                    // return this.persons.filter(a=>a.salary>1000)
+                },
+                sortBySalary() {
+                    // console.log(this.array.sort((a,b)=>a-b)); сорт по возрастанию
+                    // console.log(this.array.sort((a,b)=>b-a)); сорт по убыванию
+                    // console.log(this.persons.sort((a,b)=>b.salary-a.salary));
+                    return this.persons.sort((a,b)=>b.salary-a.salary);
+                },
+                sortByAge() {
+                    // console.log(this.persons.sort((a,b)=>a.age-b.age));
+                    let sortByAgeArr = this.persons.sort((a,b)=>a.age-b.age);
+                    console.log(sortByAgeArr)
+                    console.log(this.persons)
+                    return sortByAgeArr
+                },
+                cartShowf() {
+                    this.cartShow = !this.cartShow
+                },
+                buyMan(idx, event) {
+                    this.cart.push(this.persons[idx])
+                },
+                removeCartItem(idx, event) {
+                    this.cart.splice(idx, 1);
+                },
             },
             computed: {
                 doubleCount() {
@@ -131,7 +198,14 @@
                 },
                 disabled() {
                     return (this.inputText > 6) ? false : true
-                }
+                },
+                cartSum() {
+                    sum = 0
+                    for (item in this.cart) {
+                        sum+=item.salary
+                    }
+                    return sum
+                },
             },
             watch: {
                 // inputText(value) {
