@@ -51,14 +51,15 @@
             <button class="add-person" @click="filterPerson">filter</button>
             <button class="add-person" @click="sortBySalary">sort by salary</button>
             <button class="add-person" @click="sortByAge">sort by age</button>
+            <button class="add-person" @click="defaultBtn">default</button>
             <button class="add-person" @click="cartShowf">cart</button>
         </div>
         <div v-if="cartShow" class="cart">
             <hr>
             <span v-if="cart.length==0">cart is empty</span>
             <ol v-else="notes.length>0">
-                <li v-else v-for="(item, idx) in cart">
-                    {{item.name}} {{item.salary}} {{item.age}}
+                <li v-else v-for="(item, idx) in cart.positions">
+                    Name: {{item.name}} <br> Price: {{item.salary}} <br> Amount: {{item.count}} <br> <br>
                     <button class="delete-btn" v-on:click="removeCartItem(idx, $event)">
                         delete
                     </button>
@@ -68,7 +69,7 @@
             <hr>
         </div>
         <div class="persons">
-            <div class="person-card" v-for="(person, idx) in persons">
+            <div class="person-card" v-for="(person, idx) in printPersons">
                 <img :src="person.avatar" class="person-avatar">
                 <span>name: {{person.name}}</span>
                 <span>age: {{person.age}}</span>
@@ -87,17 +88,8 @@
     <script>
         const {
             createApp
-        } = Vue
-        createApp({
-            data() {
-                return {
-                    title: 'xbn note',
-                    counter: 0,
-                    placeholderStr: "Note text",
-                    inputText: "",
-                    notes: [],
-                    limit: 30,
-                    persons: [
+        } = Vue;
+        const persons= [
                         {
                         age:18,
                         name:'Rudik',
@@ -125,7 +117,7 @@
                         {
                         age:18,
                         name:'Rudik',
-                        salary:1000,
+                        salary:1010,
                         avatar: 'https://randomuser.me/api/portraits/men/27.jpg'
                         },
                         {
@@ -134,11 +126,20 @@
                         salary:1000,
                         avatar: 'https://randomuser.me/api/portraits/men/72.jpg'
                         },
-                    ],
+                    ];
+        createApp({
+            data() {
+                return {
+                    title: 'xbn note',
+                    counter: 0,
+                    placeholderStr: "Note text",
+                    inputText: "",
+                    notes: [],
+                    limit: 30,
                     array:[435,234,786,4324,345,6578,324,234],
-                    printPersons:[],
+                    printPersons:persons,
                     cartShow: false,
-                    cart:[]
+                    cart:{positions:[], total:0}
                 }
             },
             methods: {
@@ -165,31 +166,42 @@
                 //   return item.toUpperCase()
                 // },
                 filterPerson() {
-                    console.log("+++");
-                    return this.persons.filter(a=>a.salary>1000)
+                    this.printPersons=persons.filter(a=>a.salary>1000)
                     // return this.persons.filter(a=>a.salary>1000)
                 },
                 sortBySalary() {
                     // console.log(this.array.sort((a,b)=>a-b)); сорт по возрастанию
                     // console.log(this.array.sort((a,b)=>b-a)); сорт по убыванию
                     // console.log(this.persons.sort((a,b)=>b.salary-a.salary));
-                    return this.persons.sort((a,b)=>b.salary-a.salary);
+                    this.printPersons = [...persons].sort((a,b)=>b.salary-a.salary);
                 },
                 sortByAge() {
-                    // console.log(this.persons.sort((a,b)=>a.age-b.age));
-                    let sortByAgeArr = this.persons.sort((a,b)=>a.age-b.age);
-                    console.log(sortByAgeArr)
-                    console.log(this.persons)
-                    return sortByAgeArr
+                    // console.log(this.persons.sort((a,b)=>a.age-b.age));s
+                    this.printPersons = [...persons].sort((a,b)=>a.age-b.age);
+                },
+                defaultBtn() {
+                    this.printPersons = persons;
+                    // console.log(this.array);
+                    // let newArray = [...this.array];
+                    // console.log(newArray);
+                    // let newArray2 = [...this.array,...newArray];
+                    // console.log(newArray2);
+                    let obj = persons[0];
+                    // console.log(obj);
+                    let obj1 = {sex:'male'};
+                    // console.log(obj1);
+                    let obj2 = {...obj,...obj1}
+                    console.log(obj2)
                 },
                 cartShowf() {
                     this.cartShow = !this.cartShow
                 },
                 buyMan(idx, event) {
-                    this.cart.push(this.persons[idx])
+                    this.cart.positions.push({...this.printPersons[idx],count:1})
+                    console.log(this.cart.positions)
                 },
                 removeCartItem(idx, event) {
-                    this.cart.splice(idx, 1);
+                    this.cart.positions.splice(idx, 1);
                 },
             },
             computed: {
@@ -200,11 +212,9 @@
                     return (this.inputText > 6) ? false : true
                 },
                 cartSum() {
-                    sum = 0
-                    for (item in this.cart) {
-                        sum+=item.salary
-                    }
-                    return sum
+                    this.cart.total = this.cart.positions.reduce((sum,item)=>sum+item.salary,0)
+                    console.log(this.cart.total)
+                    return this.cart.positions.reduce((sum,item)=>sum+item.salary,0)
                 },
             },
             watch: {
