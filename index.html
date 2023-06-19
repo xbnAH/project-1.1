@@ -14,19 +14,17 @@
         <h1 :style="{color: inputText.length > 5 ? 'red' : 'red'}">{{title}}</h1>
         <div class="form-comment">
             <div>
-                <input
-                    class="note-input"
-                    type="text"
-                    :placeholder="placeholderStr"
-                    v-model="inputText"
-                    @input="inputChange"
-                    @keypress.enter="addNote"
-                    :maxlength="limit"
+                <input 
+                class="note-input" 
+                type="text" 
+                :placeholder="placeholderStr" 
+                v-model="inputText"
+                @input="inputChange"
+                @keypress.enter="addNote"
+                :maxlength="limit" 
                 />
             </div>
-            <button
-                :class= "inputText.length > 6 ? 'add-note' : 'add-note1'"
-                @click="addNote">
+            <button :class="inputText.length > 6 ? 'add-note' : 'add-note1'" @click="addNote">
                 Add note
             </button>
         </div>
@@ -59,7 +57,7 @@
             <span v-if="cart.length==0">cart is empty</span>
             <ol v-else="notes.length>0">
                 <li v-else v-for="(item, idx) in cart.positions">
-                    Name: {{item.name}} <br> Price: {{item.salary}} <br> Amount: {{item.count}} <br> <br>
+                    <span class="name">Name: {{item.name}}</span> <br> <span class="price">Price: {{item.salary}}</span> <br> Amount: <span class="amount1" style="color: red;">{{item.count}}</span> <br> <br>
                     <button class="delete-btn" v-on:click="removeCartItem(idx, $event)">
                         delete
                     </button>
@@ -77,7 +75,7 @@
                 <button class="add-person" v-on:click="buyMan(idx, $event)">buy</button>
             </div>
         </div>
-        
+
     </div>
     <!-- <script src="app.js"></script> -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -89,44 +87,49 @@
         const {
             createApp
         } = Vue;
-        const persons= [
-                        {
-                        age:18,
-                        name:'Rudik',
-                        salary:1000,
-                        avatar: 'https://randomuser.me/api/portraits/men/7.jpg'
-                        },
-                        {
-                        age:19,
-                        name:'Vitalik',
-                        salary:2000,
-                        avatar: 'https://randomuser.me/api/portraits/men/75.jpg'
-                        },
-                        {
-                        age:18,
-                        name:'Valera',
-                        salary:3000,
-                        avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
-                        },
-                        {
-                        age:18,
-                        name:'Anna',
-                        salary:1000,
-                        avatar: 'https://randomuser.me/api/portraits/men/37.jpg'
-                        },
-                        {
-                        age:18,
-                        name:'Rudik',
-                        salary:1010,
-                        avatar: 'https://randomuser.me/api/portraits/men/27.jpg'
-                        },
-                        {
-                        age:18,
-                        name:'Rudik',
-                        salary:1000,
-                        avatar: 'https://randomuser.me/api/portraits/men/72.jpg'
-                        },
-                    ];
+        const persons = [{
+                id: '0',
+                age: 18,
+                name: 'Rudik',
+                salary: 1000,
+                avatar: 'https://randomuser.me/api/portraits/men/7.jpg',
+            },
+            {
+                id: '1',
+                age: 19,
+                name: 'Vitalik',
+                salary: 2000,
+                avatar: 'https://randomuser.me/api/portraits/men/75.jpg'
+            },
+            {
+                id: '2',
+                age: 18,
+                name: 'Valera',
+                salary: 3000,
+                avatar: 'https://randomuser.me/api/portraits/men/5.jpg'
+            },
+            {
+                id: '3',
+                age: 18,
+                name: 'Anna',
+                salary: 1000,
+                avatar: 'https://randomuser.me/api/portraits/men/37.jpg'
+            },
+            {
+                id: '4',
+                age: 18,
+                name: 'Rudik',
+                salary: 1010,
+                avatar: 'https://randomuser.me/api/portraits/men/27.jpg'
+            },
+            {
+                id: '5',
+                age: 18,
+                name: 'Rudik',
+                salary: 1000,
+                avatar: 'https://randomuser.me/api/portraits/men/72.jpg'
+            },
+        ];
         createApp({
             data() {
                 return {
@@ -136,10 +139,13 @@
                     inputText: "",
                     notes: [],
                     limit: 30,
-                    array:[435,234,786,4324,345,6578,324,234],
-                    printPersons:persons,
+                    array: [435, 234, 786, 4324, 345, 6578, 324, 234],
+                    printPersons: persons,
                     cartShow: false,
-                    cart:{positions:[], total:0}
+                    cart: {
+                        positions: [],
+                        total: 0
+                    }
                 }
             },
             methods: {
@@ -149,6 +155,7 @@
                 addNote() {
                     if (this.inputText != "") {
                         this.notes.push(this.inputText)
+                        // push - добавлнение в конец массива
                         // this.counter ++
                     };
                     this.inputText = "";
@@ -160,24 +167,34 @@
                 // },
                 removeNote(idx, event) {
                     this.notes.splice(idx, 1);
+                    // splice - удаленмие элемента массива из массива, начиная с указаного инекса, удаляет столько сколько я напишу (в данном случае ОДИН)
                     // this.counter --
                 },
                 // toUpperCase(item) {
                 //   return item.toUpperCase()
                 // },
                 filterPerson() {
-                    this.printPersons=persons.filter(a=>a.salary>1000)
+                    this.printPersons = persons.filter(a => a.salary > 1000)
+                    // filter - создает новый массив с указаным фильтром(в данном случае зарплата(salary))
+                    // условие фильтрации передаентся с помощью стрелосчной функции (=>)
                     // return this.persons.filter(a=>a.salary>1000)
                 },
                 sortBySalary() {
                     // console.log(this.array.sort((a,b)=>a-b)); сорт по возрастанию
                     // console.log(this.array.sort((a,b)=>b-a)); сорт по убыванию
                     // console.log(this.persons.sort((a,b)=>b.salary-a.salary));
-                    this.printPersons = [...persons].sort((a,b)=>b.salary-a.salary);
+                    this.printPersons = [...persons].sort((a, b) => b.salary - a.salary);
+                    // sort - изменят исходный массив(в данном случает по зарпалте(по убываию))
+                    // условие фильтрации передаентся с помощью стрелосчной функции (=>)
+                    // ... - спред-оператор (spread) в данном случае копирует массив persons, разрывая связь с исходным массивом
+
                 },
                 sortByAge() {
-                    // console.log(this.persons.sort((a,b)=>a.age-b.age));s
-                    this.printPersons = [...persons].sort((a,b)=>a.age-b.age);
+                    // console.log(this.persons.sort((a,b)=>a.age-b.age));
+                    this.printPersons = [...persons].sort((a, b) => a.age - b.age);
+                    // sort - изменят исходный массив(в данном случает по возрасту(по возрастанию))
+                    // условие фильтрации передаентся с помощью стрелосчной функции (=>)
+                    // ... - спред-оператор (spread) в данном случае копирует массив persons, разрывая связь с исходным массивом
                 },
                 defaultBtn() {
                     this.printPersons = persons;
@@ -188,20 +205,39 @@
                     // console.log(newArray2);
                     let obj = persons[0];
                     // console.log(obj);
-                    let obj1 = {sex:'male'};
+                    let obj1 = {
+                        sex: 'male'
+                    };
                     // console.log(obj1);
-                    let obj2 = {...obj,...obj1}
-                    console.log(obj2)
+                    let obj2 = {
+                        ...obj,
+                        ...obj1
+                    }
+                    // console.log(obj2)
                 },
                 cartShowf() {
                     this.cartShow = !this.cartShow
+                    // меняем знаечение на ппротивоположное (в данном случае False на True)
                 },
                 buyMan(idx, event) {
-                    this.cart.positions.push({...this.printPersons[idx],count:1})
-                    console.log(this.cart.positions)
+                    let inCart = this.cart.positions.findIndex(item => item.id === this.printPersons[idx].id)
+                    // findIndex - возващает индекс первого вхождения (если в массиве несколько одинаковых элеменнтов, то он возвращет индекс первого) определенного элемента по заданному условию
+                    // если findIndex ничего не нашел, то он возвращает -1
+                    // find - возвращает весь объект, если его находит в заданном массиве, а если не находит, возвращает undefined
+                    if (inCart != -1) {
+                        this.cart.positions[inCart].count++
+                    } else {
+                        this.cart.positions.push({
+                            ...this.printPersons[idx],
+                            count: 1
+                        })
+                    };
                 },
                 removeCartItem(idx, event) {
-                    this.cart.positions.splice(idx, 1);
+                    this.cart.positions[idx].count--
+                    if (this.cart.positions[idx].count === 0) {
+                        this.cart.positions.splice(idx, 1);
+                    }
                 },
             },
             computed: {
@@ -212,9 +248,10 @@
                     return (this.inputText > 6) ? false : true
                 },
                 cartSum() {
-                    this.cart.total = this.cart.positions.reduce((sum,item)=>sum+item.salary,0)
-                    console.log(this.cart.total)
-                    return this.cart.positions.reduce((sum,item)=>sum+item.salary,0)
+                    this.cart.total = this.cart.positions.reduce((sum, item) => sum + item.salary * item.count, 0)
+                    // reduce - производит вычисления из эллементов массива по заданному правилу (например суммирует) и возращает результат вычисления(одно число)
+                    // callback функция - это функция которая вызывается внутри функции
+                    return this.cart.positions.reduce((sum, item) => sum + item.salary * item.count, 0)
                 },
             },
             watch: {
